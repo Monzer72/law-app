@@ -32,26 +32,31 @@
             res.innerText = "جاري البحث في القانون السوري...";
             
             try {
-                // تأكد من وضع مفتاحك الجديد هنا
-                const key = "AIzaSyAKPf6JrSgkbrdSA7yt_5WmdbKPE5Xy7SE"; 
+                // تأكد من وضع مفتاح الـ API الخاص بك هنا
+                const key = "AIzaSyA3UCMRUohujRGRvVxFBDSNd_CkjiXvcNg"; 
                 
-                // تم تعديل الرابط هنا إلى v1 ليناسب الصورة الأخيرة
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+                // استخدام الموديل المستقر gemini-pro مع نسخة الرابط v1
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${key}`;
                 
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة على هذا السؤال القانوني: " + q }] }] })
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة وتفصيل على السؤال التالي: " + q }] }]
+                    })
                 });
 
                 const data = await response.json();
+                
                 if (data.candidates && data.candidates[0].content) {
                     res.innerText = data.candidates[0].content.parts[0].text;
+                } else if (data.error) {
+                    res.innerText = "خطأ من جوجل: " + data.error.message;
                 } else {
-                    res.innerText = "خطأ في الرد: " + (data.error ? data.error.message : "يرجى المحاولة مرة أخرى");
+                    res.innerText = "لم يتم العثور على إجابة، حاول صياغة السؤال بشكل مختلف.";
                 }
             } catch (e) {
-                res.innerText = "فشل في الوصول للخدمة. جرب تحديث الصفحة.";
+                res.innerText = "فشل في الاتصال. تأكد من الإنترنت وحاول مرة أخرى.";
             }
             btn.disabled = false;
         }

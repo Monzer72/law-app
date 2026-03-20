@@ -5,15 +5,8 @@ import google.generativeai as genai
 import os
 from PyPDF2 import PdfReader
 
+# هذا السطر هو السر ليتمكن Vercel من رؤية المحرك
 app = FastAPI()
-
-# السماح للواجهة بالاتصال بالمحرك
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
@@ -27,13 +20,11 @@ async def ask_lawyer(message: str = Form(...)):
     try:
         reader = PdfReader("sy-penal-code.pdf")
         text = ""
-        # قراءة أول 30 صفحة فقط لضمان سرعة الرد وعدم حدوث ضغط
         for page in reader.pages[:30]:
             text += page.extract_text()
-            
         model = genai.GenerativeModel("gemini-1.5-flash")
-        prompt = f"أنت مساعد قانوني سوري خبير. من خلال النص التالي: {text}\n\nأجب بدقة على: {message}"
+        prompt = f"أنت مساعد قانوني سوري. بناءً على النص: {text}\n\nأجب على: {message}"
         response = model.generate_content(prompt)
         return {"answer": response.text}
     except Exception as e:
-        return {"answer": "عذراً، حدث خطأ في معالجة النص. تأكد من أن ملف الـ PDF مرفوع بشكل صحيح."}
+        return {"answer": "حدث خطأ في قراءة ملف القانون، تأكد من وجوده."}

@@ -8,7 +8,7 @@
         body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
         header { background: #1a237e; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-bottom: 15px; box-sizing: border-box; outline: none; text-align: center; }
         button { background: #1a237e; color: white; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; width: 100%; font-size: 16px; }
         #res { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; text-align: right; line-height: 1.6; color: #333; min-height: 50px; border-right: 5px solid #1a237e; white-space: pre-wrap; }
     </style>
@@ -29,26 +29,26 @@
             if(!q) return;
 
             btn.disabled = true;
-            res.innerText = "جاري الاتصال بمحرك الذكاء الاصطناعي...";
+            res.innerText = "جاري البحث في القانون السوري...";
             
             try {
-                // ضع مفتاحك الجديد هنا
-                const key = "AIzaSyAKPf6JrSgkbrdSA7yt_5WmdbKPE5Xy7SE"; 
+                // تأكد من وضع مفتاحك الجديد هنا
+                const key = "AIzaSyA3UCMRUohujRGRvVxFBDSNd_CkjiXvcNg"; 
                 
-                // الرابط المحدث الذي يحل مشكلة image_aa336a
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+                // تم تعديل الرابط هنا إلى v1 ليناسب الصورة الأخيرة
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
                 
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب من معرفتك بالقانون السوري على: " + q }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة على هذا السؤال القانوني: " + q }] }] })
                 });
 
                 const data = await response.json();
                 if (data.candidates && data.candidates[0].content) {
                     res.innerText = data.candidates[0].content.parts[0].text;
                 } else {
-                    res.innerText = "خطأ في الرد: " + (data.error ? data.error.message : "حاول مرة أخرى");
+                    res.innerText = "خطأ في الرد: " + (data.error ? data.error.message : "يرجى المحاولة مرة أخرى");
                 }
             } catch (e) {
                 res.innerText = "فشل في الوصول للخدمة. جرب تحديث الصفحة.";

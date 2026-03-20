@@ -32,17 +32,16 @@
             res.innerText = "جاري البحث في القانون السوري...";
             
             try {
-                // تأكد من وضع مفتاح الـ API الخاص بك هنا
-                const key = "AIzaSyAKPf6JrSgkbrdSA7yt_5WmdbKPE5Xy7SE"; 
+                const key = "AIzaSyA3UCMRUohujRGRvVxFBDSNd_CkjiXvcNg"; 
                 
-                // استخدام الموديل المستقر gemini-pro مع نسخة الرابط v1
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${key}`;
+                // هذا هو الرابط الصحيح والمحدث الذي يحل مشكلة الصورة الأخيرة
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
                 
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة وتفصيل على السؤال التالي: " + q }] }]
+                        contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة على السؤال التالي: " + q }] }]
                     })
                 });
 
@@ -51,12 +50,12 @@
                 if (data.candidates && data.candidates[0].content) {
                     res.innerText = data.candidates[0].content.parts[0].text;
                 } else if (data.error) {
-                    res.innerText = "خطأ من جوجل: " + data.error.message;
+                    res.innerText = "خطأ تقني: " + data.error.message;
                 } else {
-                    res.innerText = "لم يتم العثور على إجابة، حاول صياغة السؤال بشكل مختلف.";
+                    res.innerText = "عذراً، لم أستطع العثور على إجابة دقيقة. حاول مرة أخرى.";
                 }
             } catch (e) {
-                res.innerText = "فشل في الاتصال. تأكد من الإنترنت وحاول مرة أخرى.";
+                res.innerText = "فشل الاتصال بالخدمة. تأكد من الإنترنت.";
             }
             btn.disabled = false;
         }

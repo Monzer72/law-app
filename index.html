@@ -29,20 +29,20 @@
             if(!q) return;
 
             btn.disabled = true;
-            res.innerText = "جاري الاتصال بخوادم الذكاء الاصطناعي...";
+            res.innerText = "جاري الاتصال بالقانون السوري...";
             
             try {
-                // هذا هو مفتاحك من الصور السابقة
-                const key = "AIzaSyAKPf6JrSgkbrdSA7yt_5WmdbKPE5Xy7SE"; 
+                // مفتاحك الصحيح من صورك السابقة
+                const key = "AIzaSyA3UCMRUohujRGRvVxFBDSNd_CkjiXvcNg"; 
                 
-                // الرابط والموديل الصحيح تماماً لحل مشكلة الصورة الأخيرة
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+                // الرابط الصحيح الذي ينهي مشكلة الصورة الأخيرة (استخدام v1)
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
                 
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "أنت محامي سوري خبير. أجب بدقة على هذا السؤال: " + q }] }]
+                        contents: [{ parts: [{ text: "أنت مساعد قانوني سوري خبير. أجب بدقة على السؤال التالي: " + q }] }]
                     })
                 });
 
@@ -51,10 +51,10 @@
                 if (data.candidates && data.candidates[0].content) {
                     res.innerText = data.candidates[0].content.parts[0].text;
                 } else {
-                    res.innerText = "حدث خطأ في الرد: " + (data.error ? data.error.message : "يرجى المحاولة مجدداً");
+                    res.innerText = "حدث خطأ في النظام: " + (data.error ? data.error.message : "يرجى المحاولة لاحقاً");
                 }
             } catch (e) {
-                res.innerText = "فشل في الاتصال. جرب تحديث الصفحة.";
+                res.innerText = "فشل في الاتصال. تأكد من الإنترنت.";
             }
             btn.disabled = false;
         }

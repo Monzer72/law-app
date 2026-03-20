@@ -5,52 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مساعد سنان القانوني</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background: #1a237e; color: white; padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 12px; border-radius: 10px; line-height: 1.5; word-wrap: break-word; }
-        .user { align-self: flex-start; background: #e3f2fd; color: #0d47a1; }
-        .bot { align-self: flex-end; background: white; border: 1px solid #ddd; }
-        footer { padding: 15px; background: white; display: flex; gap: 10px; border-top: 1px solid #ddd; }
-        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; }
-        button { background: #1a237e; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        header { background: #1a237e; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        input { width: 80%; padding: 12px; border: 1px solid #ccc; border-radius: 25px; margin-bottom: 10px; }
+        button { background: #1a237e; color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; }
+        #response { margin-top: 20px; text-align: right; padding: 10px; background: #e8eaf6; border-radius: 10px; min-height: 50px; }
     </style>
 </head>
 <body>
-    <header>مساعد سنان القانوني</header>
-    <div id="chat-box">
-        <div class="msg bot">مرحباً بك، اسألني عن أي مادة في قانون العقوبات السوري.</div>
+    <div class="container">
+        <header>مساعد سنان القانوني</header>
+        <input type="text" id="ask" placeholder="اسأل عن أي مادة قانونية...">
+        <button onclick="talk()">إرسال</button>
+        <div id="response">الإجابة ستظهر هنا...</div>
     </div>
-    <footer>
-        <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
-        <button onclick="send()">إرسال</button>
-    </footer>
 
     <script>
-        async function send() {
-            const input = document.getElementById('userInput');
-            const box = document.getElementById('chat-box');
-            if(!input.value.trim()) return;
+        async function talk() {
+            const btn = document.querySelector('button');
+            const resDiv = document.getElementById('response');
+            const question = document.getElementById('ask').value;
+            if(!question) return;
 
-            const userMsg = input.value;
-            box.innerHTML += `<div class="msg user">${userMsg}</div>`;
-            input.value = "";
-            box.scrollTop = box.scrollHeight;
+            btn.innerText = "جاري البحث...";
+            resDiv.innerText = "أقوم بمراجعة القانون السوري الآن...";
 
             try {
-                // تعديل طريقة الإرسال لتناسب FastAPI
-                const response = await fetch('/ask', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ 'message': userMsg })
+                const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIza...", {
+                    method: "POST",
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي سوري خبير، أجب عن هذا السؤال بدقة: " + question }] }] })
                 });
-                
                 const data = await response.json();
-                box.innerHTML += `<div class="msg bot">${data.answer}</div>`;
-            } catch (error) {
-                box.innerHTML += `<div class="msg bot">حدث خطأ في الاتصال بالسيرفر.</div>`;
+                resDiv.innerText = data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                resDiv.innerText = "تأكد من وضع مفتاح الـ API الصحيح في الكود.";
             }
-            box.scrollTop = box.scrollHeight;
+            btn.innerText = "إرسال";
         }
     </script>
 </body>

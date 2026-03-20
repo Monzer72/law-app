@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مساعد سنان القانوني</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: #1a237e; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; }
+        .user { align-self: flex-start; background-color: #e3f2fd; color: #0d47a1; border-bottom-right-radius: 2px; }
+        .bot { align-self: flex-end; background-color: white; color: #333; border-bottom-left-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        footer { padding: 10px; background-color: white; display: flex; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        button { background-color: #1a237e; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>مساعد سنان القانوني</header>
+
+<div id="chat-container">
+    <div class="message bot">مرحباً بك. أنا مساعدك القانوني السوري. كيف يمكنني مساعدتك اليوم؟</div>
+</div>
+
+<footer>
+    <input type="text" id="userInput" placeholder="اسأل عن مادة قانونية...">
+    <button onclick="sendMessage()">إرسال</button>
+</footer>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const container = document.getElementById('chat-container');
+        if (input.value.trim() === "") return;
+
+        // إضافة رسالة المستخدم
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user';
+        userDiv.innerText = input.value;
+        container.appendChild(userDiv);
+
+        // هنا سنقوم لاحقاً بربط الكود بـ Gemini
+        input.value = "";
+        container.scrollTop = container.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
